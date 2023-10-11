@@ -12,18 +12,24 @@ import pino, { Logger } from 'pino';
 import EventEmitter from 'events';
 import { clone, formatPhone } from './helpers';
 import { WhatsAppAPIOptions } from './types';
+import fs from 'fs';
 
 export class WhatsAppAPI extends EventEmitter {
     public socket: ReturnType<typeof makeWASocket> | undefined;
     public options: WhatsAppAPIOptions | undefined;
+    public path = './wp-session';
 
     constructor(options?: WhatsAppAPIOptions) {
         super();
         this.options = options;
+
+        if (this.options?.sessionPath) {
+            this.path = this.options.sessionPath;
+        }
     }
 
     async initialize() {
-        let { state, saveCreds } = await useMultiFileAuthState(this.options?.sessionPath || './wp-session');
+        let { state, saveCreds } = await useMultiFileAuthState(this.path);
         const { version } = await fetchLatestWaWebVersion({});
 
         const socketOptions: SocketConfig = {
@@ -49,6 +55,12 @@ export class WhatsAppAPI extends EventEmitter {
         this.socket.ev.on('messages.upsert', this.message.bind(this));
     }
 
+    restart() {
+        this.socket?.ev.removeAllListeners('creds.update');
+        this.socket?.ev.removeAllListeners('connection.update');
+        this.socket?.ev.removeAllListeners('messages.upsert');
+    }
+
     connectionUpdate(update: BaileysEventMap['connection.update']) {
         const { connection, lastDisconnect, qr } = update;
 
@@ -58,7 +70,17 @@ export class WhatsAppAPI extends EventEmitter {
 
         if (connection === 'close') {
             const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut;
-            if (shouldReconnect) this.initialize();
+            if (shouldReconnect) {
+                this.initialize();
+            } else {
+                this.emit('disconnect', update);
+                this.restart();
+                const files = fs.readdirSync(this.path);
+
+                for (const file of files) {
+                    fs.unlinkSync(`${this.path}/${file}`);
+                }
+            }
         } else if (connection === 'open') {
             let data = clone(this.socket?.authState.creds.me);
             if (!data) return;

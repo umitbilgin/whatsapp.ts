@@ -4,13 +4,13 @@ import qrcode from 'qrcode-terminal';
 
 let wp = new WhatsAppAPI({
     deviceName: 'Chrome',
-    sessionPath: './wp-session',
+    sessionPath: './wp-session22',
     baileysOptions: {
         browser: ['Allahyar', 'Safari', '3.0'],
-    }
+    },
 });
 
-console.log("Starting");
+console.log('Starting');
 
 wp.initialize();
 
@@ -20,6 +20,11 @@ wp.on('qr', (qr) => {
 
 wp.on('ready', async (data) => {
     console.log(data);
+});
+
+wp.on('disconnect', (reason) => {
+    console.log('disconnected');
+    wp.initialize();
 });
 
 wp.on('message', (message) => {
