@@ -23,8 +23,6 @@ export class WhatsAppAPI extends EventEmitter {
     }
 
     async initialize() {
-        console.log('Client initializing...');
-
         let { state, saveCreds } = await useMultiFileAuthState(this.options?.sessionPath || './wp-session');
         const { version } = await fetchLatestWaWebVersion({});
 
@@ -40,6 +38,10 @@ export class WhatsAppAPI extends EventEmitter {
             socketOptions.browser = [this.options.deviceName, 'Safari', '3.0'];
         }
 
+        if (this.options?.baileysOptions) {
+            Object.assign(socketOptions, this.options.baileysOptions);
+        }
+
         this.socket = makeWASocket(socketOptions);
 
         this.socket.ev.on('creds.update', saveCreds);
@@ -47,7 +49,7 @@ export class WhatsAppAPI extends EventEmitter {
         this.socket.ev.on('messages.upsert', this.message.bind(this));
     }
 
-    connectionUpdate(update: any) {
+    connectionUpdate(update: BaileysEventMap['connection.update']) {
         const { connection, lastDisconnect, qr } = update;
 
         if (qr) {
@@ -55,7 +57,7 @@ export class WhatsAppAPI extends EventEmitter {
         }
 
         if (connection === 'close') {
-            const shouldReconnect = (lastDisconnect.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut;
+            const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut;
             if (shouldReconnect) this.initialize();
         } else if (connection === 'open') {
             let data = clone(this.socket?.authState.creds.me);
@@ -69,6 +71,7 @@ export class WhatsAppAPI extends EventEmitter {
     message(update: BaileysEventMap['messages.upsert']) {
         for (const message of update.messages) {
             if (message.key.fromMe) continue;
+            if (message.broadcast) continue;
             this.emit('message', message);
         }
     }

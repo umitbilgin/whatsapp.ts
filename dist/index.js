@@ -90,6 +90,8 @@ class WhatsAppAPI extends events_1.default {
         for (const message of update.messages) {
             if (message.key.fromMe)
                 continue;
+            if (message.broadcast)
+                continue;
             this.emit('message', message);
         }
     }

@@ -1,10 +1,16 @@
+import { SocketConfig } from '@whiskeysockets/baileys';
 import { WhatsAppAPI } from '../src/index';
 import qrcode from 'qrcode-terminal';
 
 let wp = new WhatsAppAPI({
     deviceName: 'Chrome',
     sessionPath: './wp-session',
+    baileysOptions: {
+        browser: ['Allahyar', 'Safari', '3.0'],
+    }
 });
+
+console.log("Starting");
 
 wp.initialize();
 

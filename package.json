@@ -7,7 +7,7 @@
         "dist"
     ],
     "scripts": {
-        "test": "ts-node tests/index.ts",
+        "test": "cls && ts-node tests/index.ts",
         "watch": "tsc -w"
     },
     "author": "",
