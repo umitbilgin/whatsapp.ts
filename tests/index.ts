@@ -6,7 +6,7 @@ let wp = new WhatsAppAPI({
     deviceName: 'Chrome',
     sessionPath: './wp-session22',
     baileysOptions: {
-        browser: ['Allahyar', 'Safari', '3.0'],
+        browser: ['Chrome', 'Safari', '3.0'],
     },
 });
 
