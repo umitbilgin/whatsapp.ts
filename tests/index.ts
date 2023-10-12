@@ -1,16 +1,11 @@
-import { SocketConfig } from '@whiskeysockets/baileys';
 import { WhatsAppAPI } from '../src/index';
 import qrcode from 'qrcode-terminal';
 
 let wp = new WhatsAppAPI({
     deviceName: 'Chrome',
     sessionPath: './wp-session22',
-    baileysOptions: {
-        browser: ['Chrome', 'Safari', '3.0'],
-    },
+    baileysOptions: {},
 });
-
-console.log('Starting');
 
 wp.initialize();
 
@@ -20,10 +15,11 @@ wp.on('qr', (qr) => {
 
 wp.on('ready', async (data) => {
     console.log(data);
+    wp.sendText('90500000000', 'Hello World!');
 });
 
 wp.on('disconnect', (reason) => {
-    console.log('disconnected');
+    console.log('Disconnected: ' + reason);
     wp.initialize();
 });
 
