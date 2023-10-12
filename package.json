@@ -1,6 +1,6 @@
 {
     "name": "whatsapp.ts",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A simple Node.js library for simplifying WhatsApp Web socket connection using the WhiskeySockets/Baileys library.",
     "keywords": ["whatsapp", "baileys", "whatsapp.ts", "whatsapp-web.js"],
     "main": "dist/index.js",
