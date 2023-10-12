@@ -7,8 +7,6 @@ let wp = new WhatsAppAPI({
     baileysOptions: {},
 });
 
-wp.initialize();
-
 wp.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
 });
@@ -26,3 +24,5 @@ wp.on('disconnect', (reason) => {
 wp.on('message', (message) => {
     console.dir(message, { depth: null });
 });
+
+wp.initialize();
