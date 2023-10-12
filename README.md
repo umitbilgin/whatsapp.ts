@@ -43,7 +43,7 @@ import { WhatsAppAPI } from 'whatsapp.ts';
 import qrcode from 'qrcode-terminal';
 
 let wp = new WhatsAppAPI({
-    deviceName: 'Chrome',
+    deviceName: 'My Device',
     sessionPath: './wp-session',
     baileysOptions: {},
 });
