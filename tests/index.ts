@@ -1,5 +1,6 @@
 import { WhatsAppAPI } from '../src/index';
 import qrcode from 'qrcode-terminal';
+import { Message } from '../src/types/message';
 
 let wp = new WhatsAppAPI({
     deviceName: 'My Device',
@@ -13,7 +14,6 @@ wp.on('qr', (qr) => {
 
 wp.on('ready', async (data) => {
     console.log(data);
-    wp.sendText('90500000000', 'Hello World!');
 });
 
 wp.on('disconnect', (reason) => {
@@ -21,8 +21,12 @@ wp.on('disconnect', (reason) => {
     wp.initialize();
 });
 
-wp.on('message', (message) => {
+wp.on('message', (message: Message) => {
     console.dir(message, { depth: null });
+
+    if (message.text.includes('ping')) {
+        message.reply('pong');
+    }
 });
 
 wp.initialize();
