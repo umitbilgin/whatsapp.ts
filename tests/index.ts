@@ -22,11 +22,13 @@ wp.on('disconnect', (reason) => {
 });
 
 wp.on('message', (message: Message) => {
-    console.dir(message, { depth: null });
-
     if (message.text.includes('ping')) {
         message.reply('pong');
     }
+});
+
+wp.on('/test', (message: Message) => {
+    message.reply(message.text);
 });
 
 wp.initialize();

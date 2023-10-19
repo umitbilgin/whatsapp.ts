@@ -4,6 +4,6 @@ export interface Message {
     from: string;
     text: string;
     type: string;
-    reply: (message: string) => Promise<void>;
+    reply: (text: string) => Promise<void>;
     data: WAMessage;
 }

@@ -111,15 +111,23 @@ export class WhatsAppAPI extends EventEmitter {
                 from: _message.key.remoteJid,
                 text,
                 type,
-                reply: async (msg: string) => {
-                    if (!_message.key.remoteJid) return;
-                    await this.socket?.sendMessage(_message.key.remoteJid, { text: msg }, { quoted: _message });
-                },
+                reply: (text) => this.reply(message, text),
                 data: _message,
             };
 
-            this.emit('message', message as Message);
+            this.emit('message', message);
+
+            if (text.startsWith('/')) {
+                const command = text.split(' ')[0];
+                message.text = text.replace(`${command} `, '');
+                this.emit(command, message);
+            }
         }
+    }
+
+    async reply(message: Message, text: string) {
+        if (!this.socket) throw new Error('Client not initialized');
+        await this.socket.sendMessage(message.from, { text }, { quoted: message.data });
     }
 
     async sendText(to: string, message: string) {

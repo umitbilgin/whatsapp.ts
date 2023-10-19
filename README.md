@@ -28,12 +28,17 @@ With whatsapp.ts, you can access the underlying socket created by Baileys direct
 * `ready`: Fired when a successful login to WhatsApp is established. Account information is passed as a parameter.
 * `disconnect`: Triggered when you log out of WhatsApp. The reason for disconnection is passed as a parameter.
 * `message`: Triggered when a message is received. The full message details are passed as a parameter.
+* `/command`: Triggered when a message with a command (starting with /) is received. The full message details are passed as a parameter.
 
 ## Functions
 
 `sendText(to, message)`
 
 Sends a text message to the specified phone number. The first parameter should be in the WhatsApp number format (e.g., number@c.us or number@s.whatsapp.net). The second parameter is the message you want to send.
+
+`message.reply(text)`
+
+This function is used to reply to a received message. You can pass the `text` parameter to send a response to the message that triggered the event.
 
 ## Example
 Below is an example of how to use the `whatsapp.ts` library:
@@ -63,14 +68,17 @@ wp.on('disconnect', (reason) => {
 });
 
 wp.on('message', (message: Message) => {
-    console.dir(message, { depth: null });
-
     if (message.text.includes('ping')) {
         message.reply('pong');
     }
 });
 
+wp.on('/test', (message: Message) => {
+    message.reply(message.text);
+});
+
 wp.initialize();
+
 ```
 ## License
 
