@@ -44,9 +44,8 @@ This function is used to reply to a received message. You can pass the `text` pa
 Below is an example of how to use the `whatsapp.ts` library:
 
 ```javascript
-import { WhatsAppAPI } from '../src/index';
+import { WhatsAppAPI } from 'whatsapp.ts';
 import qrcode from 'qrcode-terminal';
-import { Message } from '../src/types/message';
 
 let wp = new WhatsAppAPI({
     deviceName: 'My Device',
@@ -67,13 +66,13 @@ wp.on('disconnect', (reason) => {
     wp.initialize();
 });
 
-wp.on('message', (message: Message) => {
+wp.on('message', (message) => {
     if (message.text.includes('ping')) {
         message.reply('pong');
     }
 });
 
-wp.on('/test', (message: Message) => {
+wp.on('/test', (message) => {
     message.reply(message.text);
 });
 
