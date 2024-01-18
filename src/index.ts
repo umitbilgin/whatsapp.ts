@@ -11,9 +11,9 @@ import { Boom } from '@hapi/boom';
 import pino, { Logger } from 'pino';
 import EventEmitter from 'events';
 import { clone } from './helpers';
-import { WhatsAppAPIOptions } from './types';
+import { WhatsAppAPIOptions, Message } from './types';
 import fs from 'fs';
-import { Message } from './types/message';
+
 export class WhatsAppAPI extends EventEmitter {
     public socket: ReturnType<typeof makeWASocket> | undefined;
     public options: WhatsAppAPIOptions | undefined;

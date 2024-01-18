@@ -1,6 +1,6 @@
 import { WhatsAppAPI } from '../src/index';
 import qrcode from 'qrcode-terminal';
-import { Message } from '../src/types/message';
+import { Message } from '../src/types';
 
 let wp = new WhatsAppAPI({
     deviceName: 'My Device',
