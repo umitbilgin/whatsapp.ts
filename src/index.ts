@@ -61,6 +61,15 @@ export class WhatsAppAPI extends EventEmitter {
         this.socket?.ev.removeAllListeners('messages.upsert');
     }
 
+    disconnect() {
+        this.restart();
+        const files = fs.readdirSync(this.path);
+
+        for (const file of files) {
+            fs.unlinkSync(`${this.path}/${file}`);
+        }
+    }
+
     connectionUpdate(update: BaileysEventMap['connection.update']) {
         const { connection, lastDisconnect, qr } = update;
 
@@ -73,13 +82,8 @@ export class WhatsAppAPI extends EventEmitter {
             if (shouldReconnect) {
                 this.initialize();
             } else {
+                this.disconnect();
                 this.emit('disconnect', update);
-                this.restart();
-                const files = fs.readdirSync(this.path);
-
-                for (const file of files) {
-                    fs.unlinkSync(`${this.path}/${file}`);
-                }
             }
         } else if (connection === 'open') {
             let data = clone(this.socket?.authState.creds.me);
