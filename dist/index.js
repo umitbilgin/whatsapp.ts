@@ -81,6 +81,13 @@ class WhatsAppAPI extends events_1.default {
         (_b = this.socket) === null || _b === void 0 ? void 0 : _b.ev.removeAllListeners('connection.update');
         (_c = this.socket) === null || _c === void 0 ? void 0 : _c.ev.removeAllListeners('messages.upsert');
     }
+    disconnect() {
+        this.restart();
+        const files = fs_1.default.readdirSync(this.path);
+        for (const file of files) {
+            fs_1.default.unlinkSync(`${this.path}/${file}`);
+        }
+    }
     connectionUpdate(update) {
         var _a, _b, _c, _d;
         const { connection, lastDisconnect, qr } = update;
@@ -93,12 +100,8 @@ class WhatsAppAPI extends events_1.default {
                 this.initialize();
             }
             else {
+                this.disconnect();
                 this.emit('disconnect', update);
-                this.restart();
-                const files = fs_1.default.readdirSync(this.path);
-                for (const file of files) {
-                    fs_1.default.unlinkSync(`${this.path}/${file}`);
-                }
             }
         }
         else if (connection === 'open') {

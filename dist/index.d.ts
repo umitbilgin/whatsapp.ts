@@ -10,6 +10,7 @@ export declare class WhatsAppAPI extends EventEmitter {
     constructor(options?: WhatsAppAPIOptions);
     initialize(): Promise<void>;
     restart(): void;
+    disconnect(): void;
     connectionUpdate(update: BaileysEventMap['connection.update']): void;
     message(update: BaileysEventMap['messages.upsert']): void;
     reply(message: Message, text: string): Promise<void>;
