@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import makeWASocket from '@whiskeysockets/baileys';
 import { BaileysEventMap } from '@whiskeysockets/baileys/lib/Types';
 import EventEmitter from 'events';

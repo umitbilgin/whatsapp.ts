@@ -52,8 +52,8 @@ class WhatsAppAPI extends events_1.default {
         }
     }
     initialize() {
-        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
             let { state, saveCreds } = yield (0, baileys_1.useMultiFileAuthState)(this.path);
             const { version } = yield (0, baileys_1.fetchLatestWaWebVersion)({});
             const socketOptions = {
