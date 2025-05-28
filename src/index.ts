@@ -5,7 +5,7 @@ import makeWASocket, {
   SocketConfig,
 } from '@whiskeysockets/baileys';
 
-import { BaileysEventMap } from '@whiskeysockets/baileys/lib/Types';
+import { BaileysEventMap, UserFacingSocketConfig } from '@whiskeysockets/baileys/lib/Types';
 
 import { Boom } from '@hapi/boom';
 import pino, { Logger } from 'pino';
@@ -32,7 +32,7 @@ export class WhatsAppAPI extends EventEmitter {
     let { state, saveCreds } = await useMultiFileAuthState(this.path);
     const { version } = await fetchLatestWaWebVersion({});
 
-    const socketOptions: SocketConfig = {
+    const socketOptions: UserFacingSocketConfig = {
       printQRInTerminal: false,
       auth: state,
       //@ts-ignore
