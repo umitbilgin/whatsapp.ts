@@ -5,22 +5,38 @@ import makeWASocket, {
   SocketConfig,
 } from '@whiskeysockets/baileys';
 
-import { BaileysEventMap, UserFacingSocketConfig } from '@whiskeysockets/baileys/lib/Types';
+import { BaileysEventMap, UserFacingSocketConfig, WAMessage } from '@whiskeysockets/baileys/lib/Types';
 
 import { Boom } from '@hapi/boom';
 import pino, { Logger } from 'pino';
 import EventEmitter from 'events';
 import { clone } from './helpers';
-import { WhatsAppAPIOptions, Message } from './types';
+import { WhatsAppAPIOptions, Message, WhatsAppEvents } from './types';
 import fs from 'fs';
 
-export class WhatsAppAPI extends EventEmitter {
+export class WhatsAppAPI {
+  private eventEmitter = new EventEmitter();
+
+  // Typed event methods
+  on<K extends keyof WhatsAppEvents>(event: K, listener: WhatsAppEvents[K]): this {
+    this.eventEmitter.on(event as string, listener);
+    return this;
+  }
+
+  emit<K extends keyof WhatsAppEvents>(event: K, ...args: Parameters<WhatsAppEvents[K]>): boolean {
+    return this.eventEmitter.emit(event as string, ...args);
+  }
+
+  off<K extends keyof WhatsAppEvents>(event: K, listener: WhatsAppEvents[K]): this {
+    this.eventEmitter.off(event as string, listener);
+    return this;
+  }
+
   public socket: ReturnType<typeof makeWASocket> | undefined;
   public options: WhatsAppAPIOptions | undefined;
   public path = './wp-session';
 
   constructor(options?: WhatsAppAPIOptions) {
-    super();
     this.options = options;
 
     if (this.options?.sessionPath) {
@@ -132,11 +148,22 @@ export class WhatsAppAPI extends EventEmitter {
 
   async reply(message: Message, text: string) {
     if (!this.socket) throw new Error('Client not initialized');
-    await this.socket.sendMessage(message.from, { text }, { quoted: message.data });
+    return this.socket.sendMessage(message.from, { text }, { quoted: message.data });
   }
 
   async sendText(to: string, message: string) {
     if (!this.socket) throw new Error('Client not initialized');
-    await this.socket.sendMessage(to, { text: message });
+    return  this.socket.sendMessage(to, { text: message });
+  }
+
+  async deleteMessageForMe(message: WAMessage, jid: string) {
+    if (!this.socket) throw new Error('Client not initialized');
+    return this.socket.chatModify({
+      deleteForMe: {
+        deleteMedia: true,
+        key: message.key,
+        timestamp: Date.now(),
+      }
+    }, jid)
   }
 }

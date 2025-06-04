@@ -1,6 +1,5 @@
 import { WhatsAppAPI } from '../src/index';
 import qrcode from 'qrcode-terminal';
-import { Message } from '../src/types';
 
 let wp = new WhatsAppAPI({
     deviceName: 'My Device',
@@ -21,14 +20,16 @@ wp.on('disconnect', (reason) => {
     wp.initialize();
 });
 
-wp.on('message', (message: Message) => {
+wp.on('message', (message) => {
     if (message.text.includes('ping')) {
         message.reply('pong');
     }
 });
 
-wp.on('/test', (message: Message) => {
-    message.reply(message.text);
+wp.on('/test', async (message) => {
+    const reply = await message.reply(message.text);
+    if (!reply?.key) return;
+    await wp.deleteMessageForMe(reply, message.from);
 });
 
 wp.initialize();

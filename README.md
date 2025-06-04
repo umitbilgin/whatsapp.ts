@@ -43,7 +43,7 @@ This function is used to reply to a received message. You can pass the `text` pa
 ## Example
 Below is an example of how to use the `whatsapp.ts` library:
 
-```javascript
+```typescript
 import { WhatsAppAPI } from 'whatsapp.ts';
 import qrcode from 'qrcode-terminal';
 
@@ -66,19 +66,21 @@ wp.on('disconnect', (reason) => {
     wp.initialize();
 });
 
+// TypeScript automatically infers message parameter type
 wp.on('message', (message) => {
     if (message.text.includes('ping')) {
         message.reply('pong');
     }
 });
 
+// Command events also have automatic type inference
 wp.on('/test', (message) => {
     message.reply(message.text);
 });
 
 wp.initialize();
-
 ```
+
 ## License
 
 This section can be found in LICENSE file.

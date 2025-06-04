@@ -1,6 +1,6 @@
 {
     "name": "whatsapp.ts",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "A simple Node.js library for simplifying WhatsApp Web socket connection using the WhiskeySockets/Baileys library.",
     "keywords": [
         "whatsapp",
@@ -13,7 +13,7 @@
         "dist"
     ],
     "scripts": {
-        "test": "cls && ts-node tests/index.ts",
+        "test": "ts-node tests/index.ts",
         "build": "tsc",
         "watch": "tsc -w"
     },
@@ -24,6 +24,7 @@
     "author": "Ümit Bilgin (https://umitbilgin.com/)",
     "license": "ISC",
     "devDependencies": {
+        "ts-node": "^10.9.2",
         "typescript": "^5.2.2"
     },
     "dependencies": {
