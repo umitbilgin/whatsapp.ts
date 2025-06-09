@@ -36,6 +36,34 @@ With whatsapp.ts, you can access the underlying socket created by Baileys direct
 
 Sends a text message to the specified phone number. The first parameter should be in the WhatsApp number format (e.g., number@c.us or number@s.whatsapp.net). The second parameter is the message you want to send.
 
+`sendImage(to, options)`
+
+Sends an image to the specified phone number. The first parameter should be in the WhatsApp number format. The second parameter is an options object containing:
+- `image`: Buffer or string (file path) - The image data or path to image file
+- `caption`: string (optional) - Caption text for the image
+
+`sendFile(to, options)`
+
+Sends a document file to the specified phone number. The first parameter should be in the WhatsApp number format. The second parameter is an options object containing:
+- `path`: string - Path to the file to be sent
+- `caption`: string (optional) - Caption text for the file
+- `fileName`: string (optional) - Custom filename for the document
+
+`sendFileBuffer(to, options)`
+
+Sends a document file using buffer data to the specified phone number. The first parameter should be in the WhatsApp number format. The second parameter is an options object containing:
+- `document`: Buffer - File data as buffer
+- `mimetype`: string - MIME type of the file
+- `caption`: string (optional) - Caption text for the file
+- `fileName`: string (optional) - Custom filename for the document
+
+`sendAudio(to, options)`
+
+Sends an audio file to the specified phone number. The first parameter should be in the WhatsApp number format. The second parameter is an options object containing:
+- `audio`: Buffer or string (file path) - The audio data or path to audio file
+- `ptt`: boolean (optional) - If set to true, will send as a voice note
+- `seconds`: number (optional) - Duration of the audio in seconds
+
 `message.reply(text)`
 
 This function is used to reply to a received message. You can pass the `text` parameter to send a response to the message that triggered the event.
@@ -44,8 +72,10 @@ This function is used to reply to a received message. You can pass the `text` pa
 Below is an example of how to use the `whatsapp.ts` library:
 
 ```typescript
-import { WhatsAppAPI } from 'whatsapp.ts';
+import { WhatsAppAPI } from '../src/index';
 import qrcode from 'qrcode-terminal';
+import fs from 'fs';
+import mime from 'mime-types';
 
 let wp = new WhatsAppAPI({
     deviceName: 'My Device',
@@ -66,16 +96,66 @@ wp.on('disconnect', (reason) => {
     wp.initialize();
 });
 
-// TypeScript automatically infers message parameter type
 wp.on('message', (message) => {
     if (message.text.includes('ping')) {
         message.reply('pong');
     }
 });
 
-// Command events also have automatic type inference
-wp.on('/test', (message) => {
-    message.reply(message.text);
+wp.on('/test', async (message) => {
+    const reply = await message.reply(message.text);
+    if (!reply?.key) return;
+    await wp.deleteMessageForMe(reply, message.from);
+});
+
+wp.on('/image', async (message) => {
+    // Buffer example
+    const file = fs.readFileSync('./tests/example.jpg');
+    await wp.sendImage(message.from, {
+        image: file,
+        caption: 'Image buffer example'
+    });
+
+    // Path example
+    await wp.sendImage(message.from, {
+        image: './tests/example.jpg',
+        caption: 'Image path example'
+    });
+});
+
+wp.on('/file', async (message) => {
+    // Buffer example
+    const file = fs.readFileSync('./tests/example.txt');
+    const mimetype = mime.lookup('./tests/example.txt');
+
+    await wp.sendFileBuffer(message.from, {
+        document: file,
+        caption: 'File buffer example',
+        mimetype: mimetype || 'application/octet-stream',
+        fileName: 'example.txt'
+    });
+
+    // Path example
+    await wp.sendFile(message.from, {
+        path: './tests/example.txt',
+        caption: 'File path example',
+        fileName: 'example.txt'
+    });
+});
+
+wp.on('/audio', async (message) => {
+    const file = fs.readFileSync('./tests/example.mp3');
+
+    // Voice note example
+    await wp.sendAudio(message.from, {
+        audio: file,
+        ptt: true, // if set to true, will send as a `voice note`
+    });
+
+    // Audio example
+    await wp.sendAudio(message.from, {
+        audio: file,
+    });
 });
 
 wp.initialize();
