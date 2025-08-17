@@ -1,8 +1,11 @@
 import makeWASocket from '@whiskeysockets/baileys';
-import { BaileysEventMap } from '@whiskeysockets/baileys/lib/Types';
-import EventEmitter from 'events';
-import { WhatsAppAPIOptions, Message } from './types';
-export declare class WhatsAppAPI extends EventEmitter {
+import { BaileysEventMap, WAMessage } from '@whiskeysockets/baileys/lib/Types';
+import { WhatsAppAPIOptions, Message, WhatsAppEvents, SendImageOptions, SendFileBufferOptions, SendFileOptions, SendAudioOptions } from './types';
+export declare class WhatsAppAPI {
+    private eventEmitter;
+    on<K extends keyof WhatsAppEvents>(event: K, listener: WhatsAppEvents[K]): this;
+    emit<K extends keyof WhatsAppEvents>(event: K, ...args: Parameters<WhatsAppEvents[K]>): boolean;
+    off<K extends keyof WhatsAppEvents>(event: K, listener: WhatsAppEvents[K]): this;
     socket: ReturnType<typeof makeWASocket> | undefined;
     options: WhatsAppAPIOptions | undefined;
     path: string;
@@ -12,6 +15,11 @@ export declare class WhatsAppAPI extends EventEmitter {
     disconnect(): void;
     connectionUpdate(update: BaileysEventMap['connection.update']): void;
     message(update: BaileysEventMap['messages.upsert']): void;
-    reply(message: Message, text: string): Promise<void>;
-    sendText(to: string, message: string): Promise<void>;
+    reply(message: Message, text: string): Promise<import("@whiskeysockets/baileys").proto.WebMessageInfo | undefined>;
+    sendText(to: string, message: string): Promise<import("@whiskeysockets/baileys").proto.WebMessageInfo | undefined>;
+    sendImage(to: string, options: SendImageOptions): Promise<import("@whiskeysockets/baileys").proto.WebMessageInfo | undefined>;
+    sendFileBuffer(to: string, options: SendFileBufferOptions): Promise<import("@whiskeysockets/baileys").proto.WebMessageInfo | undefined>;
+    sendFile(to: string, options: SendFileOptions): Promise<import("@whiskeysockets/baileys").proto.WebMessageInfo | undefined>;
+    sendAudio(to: string, options: SendAudioOptions): Promise<import("@whiskeysockets/baileys").proto.WebMessageInfo | undefined>;
+    deleteMessageForMe(message: WAMessage, jid: string): Promise<void>;
 }

@@ -1,8 +1,28 @@
-import { WAMessage } from '@whiskeysockets/baileys/lib/Types/Message';
+import { WAMessage, WAProto } from '@whiskeysockets/baileys/lib/Types/Message';
 export interface Message {
     from: string;
     text: string;
     type: string;
-    reply: (text: string) => Promise<void>;
+    reply: (text: string) => Promise<WAProto.WebMessageInfo | undefined>;
     data: WAMessage;
+}
+export interface SendImageOptions {
+    caption?: string;
+    image: Buffer | string;
+}
+export interface SendFileOptions {
+    caption?: string;
+    path: string;
+    fileName?: string;
+}
+export interface SendFileBufferOptions {
+    caption?: string;
+    document: Buffer;
+    mimetype: string;
+    fileName?: string;
+}
+export interface SendAudioOptions {
+    audio: Buffer | string;
+    seconds?: number;
+    ptt?: boolean;
 }

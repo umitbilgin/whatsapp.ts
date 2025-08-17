@@ -48,13 +48,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WhatsAppAPI = void 0;
 const baileys_1 = __importStar(require("@whiskeysockets/baileys"));
 const pino_1 = __importDefault(require("pino"));
+const mime_types_1 = __importDefault(require("mime-types"));
 const events_1 = __importDefault(require("events"));
 const helpers_1 = require("./helpers");
 const fs_1 = __importDefault(require("fs"));
-class WhatsAppAPI extends events_1.default {
+class WhatsAppAPI {
+    // Typed event methods
+    on(event, listener) {
+        this.eventEmitter.on(event, listener);
+        return this;
+    }
+    emit(event, ...args) {
+        return this.eventEmitter.emit(event, ...args);
+    }
+    off(event, listener) {
+        this.eventEmitter.off(event, listener);
+        return this;
+    }
     constructor(options) {
         var _a;
-        super();
+        this.eventEmitter = new events_1.default();
         this.path = './wp-session';
         this.options = options;
         if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.sessionPath) {
@@ -161,14 +174,74 @@ class WhatsAppAPI extends events_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.socket)
                 throw new Error('Client not initialized');
-            yield this.socket.sendMessage(message.from, { text }, { quoted: message.data });
+            return this.socket.sendMessage(message.from, { text }, { quoted: message.data });
         });
     }
     sendText(to, message) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.socket)
                 throw new Error('Client not initialized');
-            yield this.socket.sendMessage(to, { text: message });
+            return this.socket.sendMessage(to, { text: message });
+        });
+    }
+    sendImage(to, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.socket)
+                throw new Error('Client not initialized');
+            if (typeof options.image === 'string') {
+                if (!fs_1.default.existsSync(options.image))
+                    throw new Error('File not found');
+                options.image = fs_1.default.readFileSync(options.image);
+            }
+            return this.socket.sendMessage(to, { image: options.image, caption: options.caption });
+        });
+    }
+    sendFileBuffer(to, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.socket)
+                throw new Error('Client not initialized');
+            return this.socket.sendMessage(to, options);
+        });
+    }
+    sendFile(to, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.socket)
+                throw new Error('Client not initialized');
+            if (!fs_1.default.existsSync(options.path))
+                throw new Error('File not found');
+            const fileBuffer = fs_1.default.readFileSync(options.path);
+            const mimetype = mime_types_1.default.lookup(options.path);
+            return this.socket.sendMessage(to, {
+                document: fileBuffer,
+                caption: options.caption,
+                mimetype: mimetype || 'application/octet-stream',
+                fileName: options.fileName
+            });
+        });
+    }
+    sendAudio(to, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.socket)
+                throw new Error('Client not initialized');
+            if (typeof options.audio === 'string') {
+                if (!fs_1.default.existsSync(options.audio))
+                    throw new Error('File not found');
+                options.audio = fs_1.default.readFileSync(options.audio);
+            }
+            return this.socket.sendMessage(to, { audio: options.audio, ptt: options.ptt, seconds: options.seconds });
+        });
+    }
+    deleteMessageForMe(message, jid) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.socket)
+                throw new Error('Client not initialized');
+            return this.socket.chatModify({
+                deleteForMe: {
+                    deleteMedia: true,
+                    key: message.key,
+                    timestamp: Date.now(),
+                },
+            }, jid);
         });
     }
 }

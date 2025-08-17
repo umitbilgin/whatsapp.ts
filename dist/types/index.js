@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./message"), exports);
 __exportStar(require("./whatsapp.api"), exports);
 __exportStar(require("./whatsapp.ready"), exports);
+__exportStar(require("./events"), exports);
