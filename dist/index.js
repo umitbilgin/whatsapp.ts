@@ -46,7 +46,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WhatsAppAPI = void 0;
-const baileys_1 = __importStar(require("@whiskeysockets/baileys"));
+const baileys_1 = __importStar(require("baileys"));
 const pino_1 = __importDefault(require("pino"));
 const mime_types_1 = __importDefault(require("mime-types"));
 const events_1 = __importDefault(require("events"));
