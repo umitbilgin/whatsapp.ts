@@ -3,9 +3,9 @@ import makeWASocket, {
     useMultiFileAuthState,
     fetchLatestWaWebVersion,
     SocketConfig,
-} from 'baileys';
+} from '@whiskeysockets/baileys';
 
-import { BaileysEventMap, UserFacingSocketConfig, WAMessage } from 'baileys/lib/Types';
+import { BaileysEventMap, UserFacingSocketConfig, WAMessage } from '@whiskeysockets/baileys/lib/Types';
 
 import { Boom } from '@hapi/boom';
 import pino, { Logger } from 'pino';

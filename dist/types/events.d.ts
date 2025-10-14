@@ -1,6 +1,6 @@
 import { Message } from './message';
 import { WhatsAppReady } from './whatsapp.ready';
-import { BaileysEventMap } from 'baileys/lib/Types';
+import { BaileysEventMap } from '@whiskeysockets/baileys/lib/Types';
 export interface WhatsAppEvents extends Record<string, (...args: any[]) => void> {
     qr: (qr: string) => void;
     ready: (data: WhatsAppReady) => void;

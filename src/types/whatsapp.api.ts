@@ -1,4 +1,4 @@
-import { SocketConfig } from 'baileys';
+import { SocketConfig } from '@whiskeysockets/baileys';
 
 export interface WhatsAppAPIOptions {
     sessionPath?: string;

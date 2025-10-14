@@ -1,3 +1,4 @@
 /wp-session*
 package-lock.json
 node_modules
+.vscode
