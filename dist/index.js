@@ -46,7 +46,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WhatsAppAPI = void 0;
-const baileys_1 = __importStar(require("@whiskeysockets/baileys"));
+const baileys_1 = __importStar(require("baileys"));
 const pino_1 = __importDefault(require("pino"));
 const mime_types_1 = __importDefault(require("mime-types"));
 const events_1 = __importDefault(require("events"));
@@ -215,7 +215,7 @@ class WhatsAppAPI {
                 document: fileBuffer,
                 caption: options.caption,
                 mimetype: mimetype || 'application/octet-stream',
-                fileName: options.fileName
+                fileName: options.fileName,
             });
         });
     }
@@ -228,7 +228,11 @@ class WhatsAppAPI {
                     throw new Error('File not found');
                 options.audio = fs_1.default.readFileSync(options.audio);
             }
-            return this.socket.sendMessage(to, { audio: options.audio, ptt: options.ptt, seconds: options.seconds });
+            return this.socket.sendMessage(to, {
+                audio: options.audio,
+                ptt: options.ptt,
+                seconds: options.seconds,
+            });
         });
     }
     deleteMessageForMe(message, jid) {

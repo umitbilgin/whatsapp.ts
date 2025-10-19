@@ -1,4 +1,4 @@
-import { WAMessage, WAProto } from '@whiskeysockets/baileys/lib/Types/Message';
+import { WAMessage, WAProto } from 'baileys/lib/Types/Message';
 export interface Message {
     from: string;
     text: string;
