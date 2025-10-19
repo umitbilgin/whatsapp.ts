@@ -1,11 +1,6 @@
-import makeWASocket, {
-    DisconnectReason,
-    useMultiFileAuthState,
-    fetchLatestWaWebVersion,
-    SocketConfig,
-} from '@whiskeysockets/baileys';
+import makeWASocket, { DisconnectReason, useMultiFileAuthState, fetchLatestWaWebVersion, SocketConfig } from 'baileys';
 
-import { BaileysEventMap, UserFacingSocketConfig, WAMessage } from '@whiskeysockets/baileys/lib/Types';
+import { BaileysEventMap, UserFacingSocketConfig, WAMessage } from 'baileys/lib/Types';
 
 import { Boom } from '@hapi/boom';
 import pino, { Logger } from 'pino';
@@ -190,7 +185,7 @@ export class WhatsAppAPI {
             document: fileBuffer,
             caption: options.caption,
             mimetype: mimetype || 'application/octet-stream',
-            fileName: options.fileName
+            fileName: options.fileName,
         });
     }
 
@@ -202,7 +197,11 @@ export class WhatsAppAPI {
             options.audio = fs.readFileSync(options.audio);
         }
 
-        return this.socket.sendMessage(to, { audio: options.audio as Buffer, ptt: options.ptt, seconds: options.seconds });
+        return this.socket.sendMessage(to, {
+            audio: options.audio as Buffer,
+            ptt: options.ptt,
+            seconds: options.seconds,
+        });
     }
 
     async deleteMessageForMe(message: WAMessage, jid: string) {

@@ -2,7 +2,7 @@ import { WhatsAppAPI } from '../src/index';
 import qrcode from 'qrcode-terminal';
 import fs from 'fs';
 import mime from 'mime-types';
-import { fetchLatestWaWebVersion } from '@whiskeysockets/baileys';
+import { fetchLatestWaWebVersion } from 'baileys';
 
 (async () => {
     const { version, isLatest } = await fetchLatestWaWebVersion({});
