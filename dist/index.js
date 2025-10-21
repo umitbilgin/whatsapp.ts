@@ -62,7 +62,21 @@ class WhatsAppAPI {
         return this.eventEmitter.emit(event, ...args);
     }
     off(event, listener) {
-        this.eventEmitter.off(event, listener);
+        if (listener) {
+            this.eventEmitter.off(event, listener);
+        }
+        else {
+            this.eventEmitter.removeAllListeners(event);
+        }
+        return this;
+    }
+    removeAllListeners(event) {
+        if (event) {
+            this.eventEmitter.removeAllListeners(event);
+        }
+        else {
+            this.eventEmitter.removeAllListeners();
+        }
         return this;
     }
     constructor(options) {

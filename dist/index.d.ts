@@ -5,7 +5,8 @@ export declare class WhatsAppAPI {
     private eventEmitter;
     on<K extends keyof WhatsAppEvents>(event: K, listener: WhatsAppEvents[K]): this;
     emit<K extends keyof WhatsAppEvents>(event: K, ...args: Parameters<WhatsAppEvents[K]>): boolean;
-    off<K extends keyof WhatsAppEvents>(event: K, listener: WhatsAppEvents[K]): this;
+    off<K extends keyof WhatsAppEvents>(event: K, listener?: WhatsAppEvents[K]): this;
+    removeAllListeners<K extends keyof WhatsAppEvents>(event?: K): this;
     socket: ReturnType<typeof makeWASocket> | undefined;
     options: WhatsAppAPIOptions | undefined;
     path: string;
