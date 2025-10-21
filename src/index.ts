@@ -31,8 +31,21 @@ export class WhatsAppAPI {
         return this.eventEmitter.emit(event as string, ...args);
     }
 
-    off<K extends keyof WhatsAppEvents>(event: K, listener: WhatsAppEvents[K]): this {
-        this.eventEmitter.off(event as string, listener);
+    off<K extends keyof WhatsAppEvents>(event: K, listener?: WhatsAppEvents[K]): this {
+        if (listener) {
+            this.eventEmitter.off(event as string, listener);
+        } else {
+            this.eventEmitter.removeAllListeners(event as string);
+        }
+        return this;
+    }
+
+    removeAllListeners<K extends keyof WhatsAppEvents>(event?: K): this {
+        if (event) {
+            this.eventEmitter.removeAllListeners(event as string);
+        } else {
+            this.eventEmitter.removeAllListeners();
+        }
         return this;
     }
 
