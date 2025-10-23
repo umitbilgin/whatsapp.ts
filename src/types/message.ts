@@ -4,7 +4,7 @@ export interface Message {
     from: string;
     text: string;
     type: string;
-    reply: (text: string) => Promise<WAProto.WebMessageInfo | undefined>;
+    reply: (text: string) => Promise<WAMessage | undefined>;
     data: WAMessage;
 }
 

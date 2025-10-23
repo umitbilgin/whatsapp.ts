@@ -16,11 +16,11 @@ export declare class WhatsAppAPI {
     disconnect(): void;
     connectionUpdate(update: BaileysEventMap['connection.update']): void;
     message(update: BaileysEventMap['messages.upsert']): void;
-    reply(message: Message, text: string): Promise<import("baileys").proto.WebMessageInfo | undefined>;
-    sendText(to: string, message: string): Promise<import("baileys").proto.WebMessageInfo | undefined>;
-    sendImage(to: string, options: SendImageOptions): Promise<import("baileys").proto.WebMessageInfo | undefined>;
-    sendFileBuffer(to: string, options: SendFileBufferOptions): Promise<import("baileys").proto.WebMessageInfo | undefined>;
-    sendFile(to: string, options: SendFileOptions): Promise<import("baileys").proto.WebMessageInfo | undefined>;
-    sendAudio(to: string, options: SendAudioOptions): Promise<import("baileys").proto.WebMessageInfo | undefined>;
+    reply(message: Message, text: string): Promise<WAMessage | undefined>;
+    sendText(to: string, message: string): Promise<WAMessage | undefined>;
+    sendImage(to: string, options: SendImageOptions): Promise<WAMessage | undefined>;
+    sendFileBuffer(to: string, options: SendFileBufferOptions): Promise<WAMessage | undefined>;
+    sendFile(to: string, options: SendFileOptions): Promise<WAMessage | undefined>;
+    sendAudio(to: string, options: SendAudioOptions): Promise<WAMessage | undefined>;
     deleteMessageForMe(message: WAMessage, jid: string): Promise<void>;
 }

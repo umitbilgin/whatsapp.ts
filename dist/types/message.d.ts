@@ -1,9 +1,9 @@
-import { WAMessage, WAProto } from 'baileys/lib/Types/Message';
+import { WAMessage } from 'baileys/lib/Types/Message';
 export interface Message {
     from: string;
     text: string;
     type: string;
-    reply: (text: string) => Promise<WAProto.WebMessageInfo | undefined>;
+    reply: (text: string) => Promise<WAMessage | undefined>;
     data: WAMessage;
 }
 export interface SendImageOptions {
