@@ -128,9 +128,9 @@ class WhatsAppAPI {
     }
     disconnect() {
         var _a;
-        this.restart();
         if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.auth)
             return;
+        this.restart();
         const files = fs_1.default.readdirSync(this.path);
         for (const file of files) {
             fs_1.default.unlinkSync(`${this.path}/${file}`);
