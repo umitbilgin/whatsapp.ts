@@ -1,6 +1,6 @@
 import makeWASocket, { DisconnectReason, useMultiFileAuthState, fetchLatestWaWebVersion, SocketConfig } from 'baileys';
 
-import { BaileysEventMap, UserFacingSocketConfig, WAMessage } from 'baileys/lib/Types';
+import { AuthenticationState, BaileysEventMap, UserFacingSocketConfig, WAMessage } from 'baileys/lib/Types';
 
 import { Boom } from '@hapi/boom';
 import pino, { Logger } from 'pino';
@@ -62,7 +62,16 @@ export class WhatsAppAPI {
     }
 
     async initialize() {
-        let { state, saveCreds } = await useMultiFileAuthState(this.path);
+        let state: AuthenticationState;
+        let saveCreds: () => Promise<void>;
+
+        if (this.options?.auth) {
+            state = this.options.auth.state;
+            saveCreds = this.options.auth.saveCreds;
+        } else {
+            ({ state, saveCreds } = await useMultiFileAuthState(this.path));
+        }
+
         const { version } = await fetchLatestWaWebVersion({});
 
         const socketOptions: UserFacingSocketConfig = {

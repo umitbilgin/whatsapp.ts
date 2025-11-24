@@ -90,8 +90,16 @@ class WhatsAppAPI {
     }
     initialize() {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b;
-            let { state, saveCreds } = yield (0, baileys_1.useMultiFileAuthState)(this.path);
+            var _a, _b, _c;
+            let state;
+            let saveCreds;
+            if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.auth) {
+                state = this.options.auth.state;
+                saveCreds = this.options.auth.saveCreds;
+            }
+            else {
+                ({ state, saveCreds } = yield (0, baileys_1.useMultiFileAuthState)(this.path));
+            }
             const { version } = yield (0, baileys_1.fetchLatestWaWebVersion)({});
             const socketOptions = {
                 printQRInTerminal: false,
@@ -100,10 +108,10 @@ class WhatsAppAPI {
                 logger: (0, pino_1.default)({ level: 'silent' }),
                 version,
             };
-            if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.deviceName) {
+            if ((_b = this.options) === null || _b === void 0 ? void 0 : _b.deviceName) {
                 socketOptions.browser = [this.options.deviceName, 'Safari', '3.0'];
             }
-            if ((_b = this.options) === null || _b === void 0 ? void 0 : _b.baileysOptions) {
+            if ((_c = this.options) === null || _c === void 0 ? void 0 : _c.baileysOptions) {
                 Object.assign(socketOptions, this.options.baileysOptions);
             }
             this.socket = (0, baileys_1.default)(socketOptions);
