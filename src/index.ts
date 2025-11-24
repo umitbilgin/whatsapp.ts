@@ -105,6 +105,7 @@ export class WhatsAppAPI {
 
     disconnect() {
         this.restart();
+        if (this.options?.auth) return;
         const files = fs.readdirSync(this.path);
 
         for (const file of files) {
