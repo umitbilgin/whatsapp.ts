@@ -127,7 +127,10 @@ class WhatsAppAPI {
         (_c = this.socket) === null || _c === void 0 ? void 0 : _c.ev.removeAllListeners('messages.upsert');
     }
     disconnect() {
+        var _a;
         this.restart();
+        if ((_a = this.options) === null || _a === void 0 ? void 0 : _a.auth)
+            return;
         const files = fs_1.default.readdirSync(this.path);
         for (const file of files) {
             fs_1.default.unlinkSync(`${this.path}/${file}`);
